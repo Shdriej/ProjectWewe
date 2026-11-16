@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Studios – Studizzz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;600&family=Permanent+Marker&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="index.html">Studizzz</a>
+    <a href="index.html" aria-current="page">Studios</a>
+    <a href="gigs.html">Upcoming gigs</a>
+    <label class="city">City <select id="city"></select></label>
+    <span class="authslot" id="auth-slot"></span>
+  </nav>
+
+  <header class="top">
+    <h1 id="page-title">Studios</h1>
+    <p id="page-sub"></p>
+  </header>
+
+  <main class="stack">
+    <section aria-label="Studios">
+      <div class="cards" id="studios"></div>
+    </section>
+
+    <section aria-labelledby="gigs-title">
+      <div class="daybar">
+        <h2 id="gigs-title">Next gigs</h2>
+        <a class="textlink" href="gigs.html">See all gigs</a>
+      </div>
+      <ul class="gigs" id="gig-preview"></ul>
+    </section>
+  </main>
+
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/pages/studios.js"></script>
+</body>
+</html>

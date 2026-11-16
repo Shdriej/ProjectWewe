@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book a room – Studizzz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;600&family=Permanent+Marker&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="index.html">Studizzz</a>
+    <a href="index.html" aria-current="page">Studios</a>
+    <a href="gigs.html">Upcoming gigs</a>
+    <span class="authslot" id="auth-slot"></span>
+  </nav>
+
+  <header class="top">
+    <h1 id="studio-name">Book a room</h1>
+    <p id="studio-sub"></p>
+  </header>
+
+  <main>
+    <section class="schedule" aria-labelledby="schedule-title">
+      <div class="daybar">
+        <h2 id="schedule-title">Schedule</h2>
+        <div class="daynav">
+          <button type="button" id="prev" aria-label="Previous day">&lsaquo;</button>
+          <input type="date" id="date" aria-label="Date">
+          <button type="button" id="next" aria-label="Next day">&rsaquo;</button>
+          <button type="button" id="today">Today</button>
+        </div>
+      </div>
+
+      <div class="timeline-wrap">
+        <div class="timeline" id="timeline" role="grid" aria-label="Room availability"></div>
+      </div>
+
+      <ul class="legend">
+        <li><span class="swatch free"></span>Free</li>
+        <li><span class="swatch picked"></span>Your selection</li>
+        <li><span class="swatch taken"></span>Booked</li>
+        <li><span class="swatch gig"></span>Live gig</li>
+      </ul>
+    </section>
+
+    <aside class="panel">
+      <form id="booking-form" novalidate>
+        <h2>Your session</h2>
+        <p class="summary" id="summary">Nothing selected yet. Click a start hour on any room, then an end hour.</p>
+
+        <p class="who" id="who"></p>
+
+        <label for="notes">Notes (optional)</label>
+        <textarea id="notes" name="notes" rows="2" maxlength="300" placeholder="Band size, gear you're bringing"></textarea>
+
+        <p class="error" id="error" role="alert"></p>
+        <button type="submit" id="book" class="primary" disabled>Book studio</button>
+      </form>
+
+      <section class="mine">
+        <h2>Bookings and gigs today</h2>
+        <ul id="booking-list"></ul>
+      </section>
+    </aside>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/pages/book.js"></script>
+</body>
+</html>
