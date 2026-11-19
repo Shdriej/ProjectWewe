@@ -1,64 +1,53 @@
 "use strict";
 
-let cities = [];
-
 async function render() {
-  const city = getCity(cities);
-  $("#page-title").textContent = `Studios in ${city}`;
+  const [studios, gigs] = await Promise.all([api.studios(), api.gigs(3)]);
+  const studio = studios[0];
+  if (!studio) {
+    $("#studio-location").textContent = "Studio details are unavailable right now.";
+    $("#studio-description").textContent = "Please try again in a moment.";
+    $("#room-list").replaceChildren(el("p", "empty", "No rooms are available to show."));
+    return;
+  }
 
-  const [list, gigs] = await Promise.all([api.studios(city), api.gigs(city, 3)]);
-  $("#page-sub").textContent = `${list.length} ${list.length === 1 ? "studio" : "studios"} to rehearse or record in. Open hours are for today.`;
+  document.title = `${studio.name} – Rehearsal & Recording`;
+  $("#studio-location").textContent = `${studio.address}, ${studio.city}`;
+  $("#studio-description").textContent = studio.blurb;
 
-  const grid = $("#studios");
-  grid.replaceChildren();
-  if (!list.length) grid.append(el("p", "empty", `No studios listed in ${city} yet.`));
+  const tags = $("#studio-tags");
+  tags.replaceChildren(...studio.tags.map(tag => el("li", "", tag)));
 
-  list.forEach(s => {
-    const card = el("article", "card");
-    const tags = el("ul", "tags");
-    s.tags.forEach(t => tags.append(el("li", "", t)));
-    const link = el("a", "primary linkbtn", "See schedule and book");
-    link.href = `book.html?studio=${encodeURIComponent(s.id)}`;
-
-    const meta = s.rooms.length
-      ? `${s.rooms.length} ${s.rooms.length === 1 ? "room" : "rooms"} · from ${CURRENCY}${s.cheapest}/hr`
-      : "No rooms listed yet";
-
+  const roomList = $("#room-list");
+  roomList.replaceChildren();
+  studio.rooms.forEach(room => {
+    const card = el("article", "room-card");
+    const link = el("a", "primary linkbtn", "See availability");
+    const rate = el("p", "room-rate");
+    link.href = `book.html?studio=${encodeURIComponent(studio.id)}&room=${encodeURIComponent(room.id)}`;
+    rate.append(`${CURRENCY}${room.rate} `, el("span", "/ hour"));
     card.append(
-      el("h3", "", s.name),
-      el("p", "addr", s.address),
-      el("p", "", s.blurb),
-      tags,
-      el("p", "meta", meta),
-      el("p", s.openRoomHours ? "avail ok" : "avail none", s.openRoomHours ? `${s.openRoomHours} open room-hours today` : "Fully booked today"),
+      el("h3", "", room.name),
+      el("p", "room-desc", room.desc),
+      rate,
       link
     );
-    grid.append(card);
+    roomList.append(card);
   });
 
   const preview = $("#gig-preview");
   preview.replaceChildren();
-  if (!gigs.length) preview.append(el("li", "empty", `No gigs listed in ${city} yet.`));
-  gigs.forEach(g => preview.append(gigItem(g)));
+  if (!gigs.length) preview.append(el("li", "empty", "No events scheduled yet. Check back soon."));
+  gigs.forEach(gig => preview.append(gigItem(gig)));
 }
 
 async function init() {
   try {
     await initApp();
-    cities = await api.cities();
-    if (!cities.length) {
-      $("#page-sub").textContent = "No studios listed yet.";
-      return;
-    }
-    fillCitySelect($("#city"), cities, () => render().catch(showLoadError));
     await render();
   } catch (err) {
-    showLoadError(err);
+    $("#studio-location").textContent = `Couldn't load studio details: ${err.message}`;
+    $("#studio-description").textContent = "Please try again in a moment.";
   }
-}
-
-function showLoadError(err) {
-  $("#page-sub").textContent = `Couldn't load studios: ${err.message}`;
 }
 
 init();

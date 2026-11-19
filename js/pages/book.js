@@ -221,27 +221,28 @@ async function init() {
   try {
     await initApp();
     const id = params.get("studio");
-    if (id) {
-      studio = await api.studio(id);
-    } else {
-      const cities = await api.cities();
-      const list = cities.length ? await api.studios(getCity(cities)) : [];
-      studio = list[0] || null;
-    }
-  } catch { studio = null; }
+    if (id) studio = await api.studio(id);
+    else studio = (await api.studios())[0] || null;
+  } catch (err) {
+    $("#studio-name").textContent = "Studio unavailable";
+    $("#studio-sub").textContent = `Couldn't load the studio: ${err.message}`;
+    document.querySelector(".schedule").hidden = true;
+    document.querySelector(".panel").hidden = true;
+    return;
+  }
 
   if (!studio) {
-    $("#studio-name").textContent = "Studio not found";
-    $("#studio-sub").textContent = "Pick a studio from the studios page.";
+    $("#studio-name").textContent = "Studio unavailable";
+    $("#studio-sub").textContent = "Please return to the studio page and try again.";
     document.querySelector(".schedule").hidden = true;
     document.querySelector(".panel").hidden = true;
     return;
   }
 
   ROOMS = studio.rooms;
-  document.title = `Book ${studio.name} – Studizzz`;
+  document.title = `Book a room – ${studio.name}`;
   $("#studio-name").textContent = studio.name;
-  $("#studio-sub").textContent = `${studio.address}, ${studio.city}. Click the first hour you need, then the last one.`;
+  $("#studio-sub").textContent = `${studio.address}, ${studio.city}. Choose a room and the hours you need.`;
   renderWho();
   await refresh();
 }

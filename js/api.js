@@ -7,6 +7,13 @@ const api = (() => {
   const DB_KEY = "studizzz-db-v1";
   const SESSION_KEY = "studizzz-session-v1";
   const CFG = { openHour: 9, closeHour: 23, currency: "₱", maxBookingHours: 8, maxDaysAhead: 90 };
+  const FEATURED_STUDIO = {
+    name: "Studizz1",
+    city: "Davao City",
+    address: "18 Acacia Lane, Calinan",
+    blurb: "A welcoming, thoughtfully equipped space for rehearsals, recording, and good ideas.",
+    tags: ["Sound-treated rooms", "Backline included", "Air-conditioned"],
+  };
   const DEMO_PASSWORD = "Password123!";
   const ROLES = ["customer", "owner", "admin"];
 
@@ -108,41 +115,53 @@ const api = (() => {
 
   /* ============ demo data ============ */
   const BASE_STUDIOS = [
-    { name: "Red River Rehearsal", city: "Davao", address: "214 Red River St", blurb: "Three soundproofed rooms a short walk from the venues.", tags: ["Drum kit", "Bass amp", "PA system"], owner: 0,
-      rooms: [["Live Room", "Full band", 30], ["Vocal Booth", "Solo or duo", 18], ["Production Suite", "Recording and mixing", 22]] },
-    { name: "Lowtone Lab", city: "Davao", address: "9 Congress Ave", blurb: "Small, tidy rooms for songwriters and podcasters.", tags: ["Upright piano", "Podcast mics"], owner: 0,
-      rooms: [["Room 1", "Up to 3 people", 15], ["Room 2", "Piano room", 20]] },
-    { name: "Canalside Sound", city: "Toril", address: "41 Canal Street", blurb: "Converted warehouse with two large live rooms.", tags: ["Two drum kits", "Guitar amps", "Parking"], owner: 1,
-      rooms: [["The Warehouse", "Full band, up to 8", 28], ["The Annex", "Trio or smaller", 17]] },
-    { name: "Northern Tape", city: "Toril", address: "7 Oldham Road", blurb: "Recording room with an engineer available on request.", tags: ["Tape machine", "Engineer available"], owner: 1,
-      rooms: [["Tracking Room", "Recording", 40]] },
-    { name: "Fitzroy Sessions", city: "Calinan", address: "88 Brunswick St", blurb: "Bright rehearsal rooms with backline included.", tags: ["Backline included", "Air conditioning"], owner: 1,
-      rooms: [["Studio 1", "Full band", 32], ["Studio 2", "Small band", 24], ["Studio 3", "Vocals and acoustic", 16]] },
+    { ...FEATURED_STUDIO, owner: 0,
+      rooms: [["The Live Room", "Full-band rehearsal · up to 8 people", 550], ["The Writing Room", "Acoustic sets · up to 4 people", 350], ["The Booth", "Vocals, voice-over, and demos", 400]] },
   ];
   // studio = [studio index, room index]; `in` = days from today
   const BASE_GIGS = [
-    { title: "Open Mic Night", act: "Local acts, sign up at the door", city: "Davao", venue: "Red River Rehearsal", studio: [0, 0], in: 2, start: 19, end: 22, price: 0, genre: "Mixed" },
-    { title: "Static Bloom", act: "Static Bloom", city: "Davao", venue: "Red Door Hall", in: 3, start: 20, end: 23, price: 12, genre: "Indie rock" },
-    { title: "Jazz at the Annex", act: "Marlo Quartet", city: "Davao", venue: "Annex Lounge", in: 6, start: 21, end: 23, price: 15, genre: "Jazz" },
-    { title: "Acoustic Sunday", act: "Mara Quinn and guests", city: "Davao", venue: "Lowtone Lab", studio: [1, 1], in: 9, start: 16, end: 19, price: 6, genre: "Folk" },
-    { title: "Canal Sessions", act: "The Hollow Pines", city: "Toril", venue: "Canalside Sound", studio: [2, 0], in: 1, start: 19, end: 22, price: 8, genre: "Folk" },
-    { title: "Basement Beats", act: "DJ Calloway", city: "Toril", venue: "Warehouse Annex", in: 4, start: 22, end: 23, price: 10, genre: "Electronic" },
-    { title: "Battle of the Bands", act: "Six local bands compete", city: "Toril", venue: "Academy 3", in: 8, start: 17, end: 22, price: 6, genre: "Rock" },
-    { title: "Sunday Soul", act: "Ivy and the Keys", city: "Calinan", venue: "The Tote", in: 0, start: 17, end: 20, price: 10, genre: "Soul" },
-    { title: "Garage Punk Night", act: "Dull Knife", city: "Calinan", venue: "Fitzroy Sessions", studio: [4, 0], in: 5, start: 20, end: 23, price: 14, genre: "Punk" },
-    { title: "Acoustic Evenings", act: "Nell Parker", city: "Calinan", venue: "Cafe Monarch", in: 7, start: 19, end: 21, price: 0, genre: "Acoustic" },
+    { title: "Studizz1 Open Mic", act: "A friendly night for local voices", studio: [0, 0], in: 2, start: 19, end: 22, price: 150, genre: "Mixed" },
+    { title: "Acoustic Room Sessions", act: "Mara Quinn and guests", studio: [0, 1], in: 6, start: 18, end: 21, price: 250, genre: "Acoustic" },
   ];
   // [customer index, studio index, room index, days from today, start, end, notes]
   const BASE_BOOKINGS = [
-    [0, 0, 1, 1, 10, 12, "Vocal rehearsal"],
-    [0, 2, 1, 2, 14, 16, ""],
-    [0, 4, 1, 4, 18, 20, "Bringing our own guitars"],
-    [1, 0, 0, 1, 15, 18, "Full band practice"],
-    [1, 1, 0, 3, 11, 12, ""],
-    [1, 3, 0, 5, 13, 16, "Demo recording"],
-    [0, 0, 0, -3, 16, 18, "Last week's session"],
-    [1, 2, 0, -2, 19, 21, ""],
+    [0, 0, 0, 1, 10, 12, "Full band rehearsal"],
+    [1, 0, 1, 3, 14, 16, "Songwriting session"],
+    [0, 0, 2, 4, 18, 20, "Vocal demo"],
+    [1, 0, 0, -3, 16, 18, "Last week's rehearsal"],
   ];
+
+  function migrateFeaturedStudio(db) {
+    const savedStudio = db.studios.find(s => s.id === db.featuredStudioId);
+    if (savedStudio) {
+      if (savedStudio.name !== "Juniper Sound Studio") return false;
+      savedStudio.name = FEATURED_STUDIO.name;
+      savedStudio.version = (savedStudio.version || 0) + 1;
+      db.gigs.forEach(gig => {
+        if (gig.studioId === savedStudio.id) {
+          gig.venue = FEATURED_STUDIO.name;
+          if (gig.title === "Juniper Open Mic") gig.title = "Studizz1 Open Mic";
+        }
+      });
+      return true;
+    }
+    const studio = db.studios.find(s => s.name === "Fitzroy Sessions") || db.studios[0];
+    if (!studio) return false;
+
+    db.featuredStudioId = studio.id;
+    Object.assign(studio, FEATURED_STUDIO, { ownerId: db.users.find(u => u.email === "owner01@studizzz.test")?.id || studio.ownerId, version: (studio.version || 0) + 1 });
+    const defaultRoomNames = ["Studio 1", "Studio 2", "Studio 3"];
+    db.rooms.filter(r => r.studioId === studio.id).forEach((room, index) => {
+      if (room.name === defaultRoomNames[index]) {
+        const [name, desc, rate] = BASE_STUDIOS[0].rooms[index];
+        Object.assign(room, { name, desc, rate });
+      }
+    });
+    db.gigs.forEach(gig => {
+      if (gig.studioId === studio.id) Object.assign(gig, { city: FEATURED_STUDIO.city, venue: FEATURED_STUDIO.name });
+    });
+    return true;
+  }
 
   async function seed() {
     const now = new Date().toISOString();
@@ -154,7 +173,7 @@ const api = (() => {
       return u;
     };
     await addUser("Site Admin", "admin@studizzz.test", "admin");
-    const owners = [await addUser("Olivia Reyes", "owner01@studizzz.test", "owner"), await addUser("Paolo Santos", "owner02@studizzz.test", "owner")];
+    const owners = [await addUser("Studio Manager", "owner01@studizzz.test", "owner")];
     const customers = [await addUser("Ana Cruz", "customer001@studizzz.test", "customer"), await addUser("Ben Garcia", "customer002@studizzz.test", "customer")];
 
     const studios = [], rooms = [];
@@ -164,7 +183,7 @@ const api = (() => {
       s.rooms.forEach(([name, desc, rate]) => rooms.push({ id: newId("ROM"), studioId: studio.id, name, desc, rate }));
     });
     const roomsOf = studioId => rooms.filter(r => r.studioId === studioId);
-    const db = { users, studios, rooms, gigs: [], bookings: [] };
+    const db = { users, studios, rooms, gigs: [], bookings: [], featuredStudioId: studios[0].id };
 
     BASE_GIGS.forEach(g => {
       const gig = { id: newId("GIG"), title: g.title, act: g.act, genre: g.genre, price: g.price, city: g.city, venue: g.venue, date: addDays(today(), g.in), start: g.start, end: g.end, createdBy: users[0].id };
@@ -188,7 +207,11 @@ const api = (() => {
 
   let seeding = null;
   async function ready() {
-    if (load()) return;
+    const existing = load();
+    if (existing) {
+      if (migrateFeaturedStudio(existing)) save(existing);
+      return;
+    }
     if (!seeding) seeding = seed().finally(() => { seeding = null; });
     await seeding;
   }
@@ -265,7 +288,6 @@ const api = (() => {
   /* ============ public API (same names as the server version) ============ */
   return {
     config: op(() => ({ ...CFG })),
-    cities: op(db => [...new Set(db.studios.map(s => s.city))].sort()),
     me: op(db => ({ user: currentUser(db) })),
 
     login: async (email, password) => {
@@ -296,8 +318,8 @@ const api = (() => {
     logout: op(() => { setSession(null); return { ok: true }; }),
 
     /* ----- studios and rooms ----- */
-    studios: op((db, city) => {
-      const list = db.studios.filter(s => !city || s.city === city).sort((a, b) => a.name.localeCompare(b.name));
+    studios: op(db => {
+      const list = db.studios.filter(s => s.id === db.featuredStudioId);
       const t = today(), h = nowHour();
       const hoursLeft = range(CFG.openHour, CFG.closeHour).filter(x => x > h).length;
       return list.map(s => {
@@ -310,12 +332,12 @@ const api = (() => {
       });
     }),
     studio: op((db, id) => {
-      const s = db.studios.find(x => x.id === id);
+      const s = db.studios.find(x => x.id === id && x.id === db.featuredStudioId);
       if (!s) throw fail(404, "Studio not found.");
       return studioDto(db, s);
     }),
     schedule: op((db, id, date) => {
-      const studio = db.studios.find(s => s.id === id);
+      const studio = db.studios.find(s => s.id === id && s.id === db.featuredStudioId);
       if (!studio) throw fail(404, "Studio not found.");
       date = dateStr(date, "Date");
       const user = currentUser(db);
@@ -337,10 +359,11 @@ const api = (() => {
     }),
     managedStudios: op(db => {
       const user = needRole(db, "owner", "admin");
-      return db.studios.filter(s => user.role === "admin" || s.ownerId === user.id).sort((a, b) => a.name.localeCompare(b.name)).map(s => studioDto(db, s));
+      return db.studios.filter(s => s.id === db.featuredStudioId && (user.role === "admin" || s.ownerId === user.id)).map(s => studioDto(db, s));
     }),
     createStudio: op((db, body) => {
       const user = needRole(db, "owner", "admin");
+      if (db.studios.some(s => s.id === db.featuredStudioId)) throw fail(409, "This site is set up for one studio.");
       body = body || {};
       let ownerId = user.id;
       if (user.role === "admin" && body.ownerId) {
@@ -375,6 +398,7 @@ const api = (() => {
     deleteStudio: op((db, id) => {
       const user = needRole(db, "owner", "admin");
       managedStudio(db, user, id);
+      if (id === db.featuredStudioId) throw fail(409, "The featured studio can't be deleted.");
       const upcoming = db.bookings.filter(b => b.studioId === id && b.status === "confirmed" && b.date >= today()).length;
       if (upcoming) throw fail(409, `Cancel the ${upcoming} upcoming booking(s) first.`);
       db.gigs = db.gigs.filter(g => g.studioId !== id);
@@ -466,7 +490,7 @@ const api = (() => {
       const user = needRole(db, "owner", "admin");
       params = params || {};
       const owned = managedIds(db, user);
-      let list = db.bookings.filter(b => !owned || owned.includes(b.studioId));
+      let list = db.bookings.filter(b => b.studioId === db.featuredStudioId && (!owned || owned.includes(b.studioId)));
       if (params.status) list = list.filter(b => b.status === params.status);
       if (params.date) list = list.filter(b => b.date === params.date);
       list.sort((a, b) => (a.date === b.date ? b.start - a.start : a.date < b.date ? 1 : -1));
@@ -475,15 +499,15 @@ const api = (() => {
     }),
 
     /* ----- gigs ----- */
-    gigs: op((db, city, limit) => {
+    gigs: op((db, limit) => {
       const max = limit ? int(limit, "Limit", 1, 200) : 200;
-      return db.gigs.filter(g => g.date >= today() && (!city || g.city === city))
+      return db.gigs.filter(g => g.studioId === db.featuredStudioId && g.date >= today())
         .sort((a, b) => (a.date === b.date ? a.start - b.start : a.date < b.date ? -1 : 1)).slice(0, max).map(gigDto);
     }),
     manageGigs: op(db => {
       const user = needRole(db, "owner", "admin");
       const owned = managedIds(db, user);
-      return db.gigs.filter(g => !owned || g.createdBy === user.id || owned.includes(g.studioId))
+      return db.gigs.filter(g => g.studioId === db.featuredStudioId && (!owned || g.createdBy === user.id || owned.includes(g.studioId)))
         .sort((a, b) => (a.date === b.date ? b.start - a.start : a.date < b.date ? 1 : -1)).slice(0, 100).map(gigDto);
     }),
     createGig: op((db, body) => {

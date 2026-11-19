@@ -3,35 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Studios – Studizzz</title>
+  <title>Studizz1 – Rehearsal & Recording</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;600&family=Permanent+Marker&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <nav class="nav">
-    <a class="brand" href="index.html">Studizzz</a>
-    <a href="index.html" aria-current="page">Studios</a>
-    <a href="gigs.html">Upcoming gigs</a>
-    <label class="city">City <select id="city"></select></label>
+    <a class="brand" href="index.html">Studizz1</a>
+    <a href="index.html" aria-current="page">Studio</a>
+    <a href="#rooms">Rooms</a>
+    <a href="gigs.html">Events</a>
     <span class="authslot" id="auth-slot"></span>
   </nav>
 
-  <header class="top">
-    <h1 id="page-title">Studios</h1>
-    <p id="page-sub"></p>
+  <header class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">YOUR NEIGHBORHOOD MUSIC STUDIO</p>
+      <h1>Come as you are.<br><span>Leave sounding like you.</span></h1>
+      <p class="hero-lead">A welcoming space to rehearse, record, and make something together. Bring your ideas — we’ll help with the rest.</p>
+      <div class="hero-actions">
+        <a class="primary" href="book.html">Check room availability</a>
+        <a class="secondary" href="#rooms">Explore our rooms</a>
+      </div>
+      <p class="hero-location" id="studio-location"></p>
+    </div>
   </header>
 
-  <main class="stack">
-    <section aria-label="Studios">
-      <div class="cards" id="studios"></div>
+  <main class="stack home-main">
+    <section id="rooms" aria-labelledby="rooms-title">
+      <div class="section-heading">
+        <h2 id="rooms-title">Find your room</h2>
+        <p>From full-band rehearsals to quiet vocal takes, there’s a comfortable space for your next session.</p>
+      </div>
+      <div class="room-cards" id="room-list"></div>
+    </section>
+
+    <section class="studio-note" aria-labelledby="about-title">
+      <div>
+        <p class="eyebrow">A LITTLE ABOUT US</p>
+        <h2 id="about-title">Good sound. Good people.</h2>
+        <p id="studio-description"></p>
+        <ul class="tags" id="studio-tags"></ul>
+      </div>
+      <a class="primary" href="book.html">Book a session</a>
     </section>
 
     <section aria-labelledby="gigs-title">
       <div class="daybar">
-        <h2 id="gigs-title">Next gigs</h2>
-        <a class="textlink" href="gigs.html">See all gigs</a>
+        <h2 id="gigs-title">Coming up at Studizz1</h2>
+        <a class="textlink" href="gigs.html">See all events</a>
       </div>
       <ul class="gigs" id="gig-preview"></ul>
     </section>

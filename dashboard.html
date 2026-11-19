@@ -3,22 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard – Studizzz</title>
+  <title>Studio dashboard – Studizz1</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;600&family=Permanent+Marker&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap">
   <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
+<body class="dashboard-page">
   <nav class="nav">
-    <a class="brand" href="index.html">Studizzz</a>
-    <a href="index.html">Studios</a>
-    <a href="gigs.html">Upcoming gigs</a>
+    <a class="brand" href="index.html">Studizz1</a>
+    <a href="index.html">Studio</a>
+    <a href="index.html#rooms">Rooms</a>
+    <a href="gigs.html">Events</a>
     <span class="authslot" id="auth-slot"></span>
   </nav>
 
   <header class="top">
-    <h1>Dashboard</h1>
+    <h1>Studio dashboard</h1>
     <p id="page-sub"></p>
   </header>
 
@@ -31,10 +32,10 @@
 
     <!-- owner + admin -->
     <section id="sec-studios" hidden>
-      <h2>Manage studios</h2>
+      <h2>Manage the studio</h2>
       <div class="stackbox">
         <form class="box" id="studio-form">
-          <h3 id="studio-form-title">Add a studio</h3>
+        <h3 id="studio-form-title">Studio profile</h3>
           <input type="hidden" id="studio-id">
           <input type="hidden" id="studio-version">
           <div class="formgrid">
@@ -46,8 +47,7 @@
           </div>
           <p class="error" id="studio-error" role="alert"></p>
           <div class="rowbtns">
-            <button type="submit" class="primary">Save studio</button>
-            <button type="button" class="btn" id="studio-clear">Clear</button>
+            <button type="submit" class="primary">Save profile</button>
           </div>
         </form>
 
@@ -55,7 +55,6 @@
           <h3 id="room-form-title">Add a room</h3>
           <input type="hidden" id="room-id">
           <div class="formgrid">
-            <div><label for="room-studio">Studio</label><select class="field" id="room-studio" required></select></div>
             <div><label for="room-name">Room name</label><input id="room-name" type="text" maxlength="60" required></div>
             <div><label for="room-desc">Description</label><input id="room-desc" type="text" maxlength="100"></div>
             <div><label for="room-rate">Hourly rate</label><input id="room-rate" type="number" min="1" step="1" required></div>
@@ -84,12 +83,7 @@
             <div><label for="gig-date">Date</label><input id="gig-date" type="date" required></div>
             <div><label for="gig-start">Starts</label><select class="field" id="gig-start"></select></div>
             <div><label for="gig-end">Ends</label><select class="field" id="gig-end"></select></div>
-            <div><label for="gig-studio">Where</label><select class="field" id="gig-studio"></select></div>
-            <div id="gig-room-wrap"><label for="gig-room">Room (blocks it for bookings)</label><select class="field" id="gig-room"></select></div>
-            <div id="gig-venue-wrap" class="wide formgrid">
-              <div><label for="gig-venue">Venue</label><input id="gig-venue" type="text" maxlength="100"></div>
-              <div><label for="gig-city">City</label><input id="gig-city" type="text" maxlength="60"></div>
-            </div>
+            <div id="gig-room-wrap"><label for="gig-room">Room (blocks it for bookings)</label><select class="field" id="gig-room" required></select></div>
           </div>
           <p class="error" id="gig-error" role="alert"></p>
           <div class="rowbtns"><button type="submit" class="primary">Add gig</button></div>

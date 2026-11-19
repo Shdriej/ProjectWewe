@@ -1,18 +1,17 @@
 "use strict";
 
-let cities = [];
-
 async function render() {
-  const city = getCity(cities);
-  const gigs = await api.gigs(city);
+  const gigs = await api.gigs();
   const list = $("#gig-list");
 
-  $("#page-title").textContent = `Upcoming gigs in ${city}`;
-  $("#page-sub").textContent = `${gigs.length} ${gigs.length === 1 ? "gig" : "gigs"} coming up.`;
+  $("#page-title").textContent = "Events at Studizz1";
+  $("#page-sub").textContent = gigs.length
+    ? `${gigs.length} upcoming ${gigs.length === 1 ? "event" : "events"} at the studio.`
+    : "No events scheduled right now. Check back soon.";
   list.replaceChildren();
 
   if (!gigs.length) {
-    list.append(el("li", "empty", `No gigs listed in ${city} yet.`));
+    list.append(el("li", "empty", "New events will appear here as soon as they're announced."));
     return;
   }
   gigs.forEach(gig => list.append(gigItem(gig)));
@@ -25,12 +24,6 @@ function showLoadError(err) {
 async function init() {
   try {
     await initApp();
-    cities = await api.cities();
-    if (!cities.length) {
-      $("#page-sub").textContent = "No gigs listed yet.";
-      return;
-    }
-    fillCitySelect($("#city"), cities, () => render().catch(showLoadError));
     await render();
   } catch (err) {
     showLoadError(err);

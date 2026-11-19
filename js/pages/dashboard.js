@@ -100,13 +100,14 @@ async function loadStudios() {
   studios = await api.managedStudios();
   renderStudios();
   fillStudioSelects();
+  if (studios[0]) editStudio(studios[0], false);
 }
 
 function renderStudios() {
   const root = $("#studio-list");
   root.replaceChildren();
   if (!studios.length) {
-    root.append(el("p", "empty", "No studios yet. Add one above."));
+    root.append(el("p", "empty", "The studio profile is not available for this account."));
     return;
   }
   studios.forEach(s => {
@@ -115,7 +116,7 @@ function renderStudios() {
     const title = el("div");
     title.append(el("h3", "", s.name), el("p", "sub", `${s.address}, ${s.city}${s.tags.length ? ` · ${s.tags.join(", ")}` : ""}`));
     const actions = el("div", "daynav");
-    actions.append(btn("Edit", "", () => editStudio(s)), btn("Delete", "danger", () => removeStudio(s)));
+    actions.append(btn("Edit profile", "", () => editStudio(s)));
     head.append(title, actions);
     card.append(head);
 
@@ -136,20 +137,11 @@ function renderStudios() {
 }
 
 function fillStudioSelects() {
-  const roomSel = $("#room-studio");
-  const keep = roomSel.value;
-  roomSel.replaceChildren(...studios.map(s => new Option(`${s.name} (${s.city})`, s.id)));
-  if (studios.some(s => s.id === keep)) roomSel.value = keep;
-
-  const gigSel = $("#gig-studio");
-  const keepGig = gigSel.value;
-  gigSel.replaceChildren(new Option("Another venue (outside a studio)", ""), ...studios.map(s => new Option(s.name, s.id)));
-  if (studios.some(s => s.id === keepGig)) gigSel.value = keepGig;
   syncGigWhere();
 }
 
-function editStudio(s) {
-  $("#studio-form-title").textContent = `Edit ${s.name}`;
+function editStudio(s, scroll = true) {
+  $("#studio-form-title").textContent = "Studio profile";
   $("#studio-id").value = s.id;
   $("#studio-version").value = s.version;
   $("#studio-name").value = s.name;
@@ -157,29 +149,12 @@ function editStudio(s) {
   $("#studio-address").value = s.address;
   $("#studio-blurb").value = s.blurb || "";
   $("#studio-tags").value = s.tags.join(", ");
-  $("#studio-form").scrollIntoView();
-}
-
-function resetStudioForm() {
-  $("#studio-form").reset();
-  $("#studio-id").value = "";
-  $("#studio-version").value = "";
-  $("#studio-form-title").textContent = "Add a studio";
-  $("#studio-error").textContent = "";
-}
-
-async function removeStudio(s) {
-  if (!confirm(`Delete ${s.name}, its rooms and its gigs?`)) return;
-  if (await attempt(() => api.deleteStudio(s.id), "Studio deleted.")) {
-    await Promise.all([loadStudios(), loadGigs(), loadStudioBookings()]);
-  }
+  if (scroll) $("#studio-form").scrollIntoView();
 }
 
 function editRoom(r) {
   $("#room-form-title").textContent = `Edit ${r.name}`;
   $("#room-id").value = r.id;
-  $("#room-studio").value = r.studioId;
-  $("#room-studio").disabled = true; // a room stays in its studio
   $("#room-name").value = r.name;
   $("#room-desc").value = r.desc || "";
   $("#room-rate").value = r.rate;
@@ -189,7 +164,6 @@ function editRoom(r) {
 function resetRoomForm() {
   $("#room-form").reset();
   $("#room-id").value = "";
-  $("#room-studio").disabled = false;
   $("#room-form-title").textContent = "Add a room";
   $("#room-error").textContent = "";
 }
@@ -202,6 +176,7 @@ async function removeRoom(r) {
 /* ============ Gigs ============ */
 async function loadGigs() {
   const box = $("#gig-list");
+  if (!studios.length) studios = await api.managedStudios();
   const list = await api.manageGigs();
   box.replaceChildren();
   if (!list.length) {
@@ -209,9 +184,10 @@ async function loadGigs() {
     return;
   }
   box.append(table(
-    ["Date", "Time", "Title", "Venue", "City", "Price", ""],
+    ["Date", "Time", "Title", "Room", "Price", ""],
     list.map(g => [
-      fmtDate(g.date), `${fmtHour(g.start)}–${fmtHour(g.end)}`, g.title, g.venue, g.city, g.price ? `${CURRENCY}${g.price}` : "Free",
+      fmtDate(g.date), `${fmtHour(g.start)}–${fmtHour(g.end)}`, g.title,
+      studios[0]?.rooms.find(r => r.id === g.roomId)?.name || "Studio room", g.price ? `${CURRENCY}${g.price}` : "Free",
       btn("Delete", "danger", async () => {
         if (!confirm(`Delete "${g.title}"?`)) return;
         if (await attempt(() => api.deleteGig(g.id), "Gig deleted.")) loadGigs();
@@ -220,12 +196,9 @@ async function loadGigs() {
   ));
 }
 
-/* Studio gigs pick a room (which blocks it); outside-venue gigs type a venue and city */
+/* Studio gigs reserve a room for the event. */
 function syncGigWhere() {
-  const studioId = $("#gig-studio").value;
-  $("#gig-room-wrap").hidden = !studioId;
-  $("#gig-venue-wrap").hidden = !!studioId;
-  const s = studios.find(x => x.id === studioId);
+  const s = studios[0];
   $("#gig-room").replaceChildren(...(s ? s.rooms : []).map(r => new Option(r.name, r.id)));
 }
 
@@ -235,7 +208,7 @@ async function loadStudioBookings() {
   const data = await api.studioBookings({ page: paging.bookings, limit: PAGE_SIZE });
   box.replaceChildren();
   if (!data.total) {
-    box.append(el("p", "empty", "No bookings at your studios yet."));
+    box.append(el("p", "empty", "No bookings at the studio yet."));
     return;
   }
   box.append(
@@ -289,24 +262,23 @@ function wireForms() {
   $("#studio-form").addEventListener("submit", async e => {
     e.preventDefault();
     const id = $("#studio-id").value;
+    if (!id) { $("#studio-error").textContent = "The studio profile is unavailable."; return; }
     const body = {
       name: $("#studio-name").value, city: $("#studio-city").value, address: $("#studio-address").value,
       blurb: $("#studio-blurb").value, tags: $("#studio-tags").value,
     };
-    if (id) body.version = Number($("#studio-version").value);
-    const ok = await attempt(() => (id ? api.updateStudio(id, body) : api.createStudio(body)), id ? "Studio updated." : "Studio added.", $("#studio-error"));
+    body.version = Number($("#studio-version").value);
+    const ok = await attempt(() => api.updateStudio(id, body), "Studio profile updated.", $("#studio-error"));
     if (ok) {
-      resetStudioForm();
       await Promise.all([loadStudios(), loadGigs()]);
     }
   });
-  $("#studio-clear").addEventListener("click", resetStudioForm);
 
   $("#room-form").addEventListener("submit", async e => {
     e.preventDefault();
     const id = $("#room-id").value;
     const body = { name: $("#room-name").value, desc: $("#room-desc").value, rate: $("#room-rate").value };
-    const studioId = $("#room-studio").value;
+    const studioId = studios[0]?.id;
     if (!id && !studioId) { $("#room-error").textContent = "Add a studio first."; return; }
     const ok = await attempt(() => (id ? api.updateRoom(id, body) : api.createRoom(studioId, body)), id ? "Room updated." : "Room added.", $("#room-error"));
     if (ok) {
@@ -316,22 +288,17 @@ function wireForms() {
   });
   $("#room-clear").addEventListener("click", resetRoomForm);
 
-  $("#gig-studio").addEventListener("change", syncGigWhere);
   $("#gig-form").addEventListener("submit", async e => {
     e.preventDefault();
-    const studioId = $("#gig-studio").value;
+    const studioId = studios[0]?.id;
+    if (!studioId) { $("#gig-error").textContent = "The studio profile is unavailable."; return; }
     const body = {
       title: $("#gig-title").value, act: $("#gig-act").value, genre: $("#gig-genre").value, price: $("#gig-price").value,
       date: $("#gig-date").value, start: Number($("#gig-start").value), end: Number($("#gig-end").value),
+      studioId,
+      roomId: $("#gig-room").value,
     };
-    if (studioId) {
-      body.studioId = studioId;
-      body.roomId = $("#gig-room").value;
-      if (!body.roomId) { $("#gig-error").textContent = "Add a room to that studio first."; return; }
-    } else {
-      body.venue = $("#gig-venue").value;
-      body.city = $("#gig-city").value;
-    }
+    if (!body.roomId) { $("#gig-error").textContent = "Add a room to the studio first."; return; }
     const ok = await attempt(() => api.createGig(body), "Gig added.", $("#gig-error"));
     if (ok) {
       $("#gig-form").reset();

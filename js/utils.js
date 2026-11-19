@@ -69,22 +69,6 @@ function renderAuthSlot() {
   slot.append(dash, out);
 }
 
-/* The chosen city is remembered between pages */
-const CITY_KEY = "studio-city";
-function getCity(cities) {
-  let saved = null;
-  try { saved = localStorage.getItem(CITY_KEY); } catch {}
-  return cities.includes(saved) ? saved : cities[0];
-}
-function fillCitySelect(select, cities, onChange) {
-  cities.forEach(c => select.append(new Option(c, c)));
-  select.value = getCity(cities);
-  select.addEventListener("change", () => {
-    try { localStorage.setItem(CITY_KEY, select.value); } catch {}
-    onChange();
-  });
-}
-
 /* One gig row, used on the home page and the gigs page */
 function gigItem(g) {
   const li = el("li", "gig");
