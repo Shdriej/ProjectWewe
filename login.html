@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log in – Juniper Sound Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="index.html">Juniper Sound</a>
+    <a href="index.html">Studio</a>
+    <a href="index.html#rooms">Rooms</a>
+    <a href="gigs.html">Events</a>
+  </nav>
+
+  <header class="top">
+    <h1>Log in</h1>
+    <p>You need an account to book a room.</p>
+  </header>
+
+  <main class="stack">
+    <section class="authbox" aria-label="Account">
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" id="tab-login" aria-selected="true" aria-controls="login-form">Log in</button>
+        <button type="button" role="tab" id="tab-register" aria-selected="false" aria-controls="register-form">Sign up</button>
+      </div>
+
+      <form class="box" id="login-form" novalidate>
+        <label for="login-email">Email</label>
+        <input id="login-email" type="email" autocomplete="email" required>
+        <label for="login-password">Password</label>
+        <input id="login-password" type="password" autocomplete="current-password" required>
+        <p class="error" id="login-error" role="alert"></p>
+        <button type="submit" class="primary">Log in</button>
+      </form>
+
+      <form class="box" id="register-form" novalidate hidden>
+        <label for="reg-name">Name</label>
+        <input id="reg-name" type="text" autocomplete="name" maxlength="80" required>
+        <label for="reg-email">Email</label>
+        <input id="reg-email" type="email" autocomplete="email" required>
+        <label for="reg-password">Password</label>
+        <input id="reg-password" type="password" autocomplete="new-password" minlength="8" maxlength="72" required>
+        <p class="hint">At least 8 characters, with a letter and a number.</p>
+        <p class="error" id="register-error" role="alert"></p>
+        <button type="submit" class="primary">Create account</button>
+      </form>
+      <p class="hint" style="margin-top:1rem">Demo accounts (password <strong>Password123!</strong>): <code>customer001@studizzz.test</code>, <code>owner01@studizzz.test</code> (studio manager), <code>admin@studizzz.test</code>. Accounts and bookings are saved in this browser only.</p>
+    </section>
+  </main>
+
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/pages/login.js"></script>
+</body>
+</html>

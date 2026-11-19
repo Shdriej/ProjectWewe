@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Studio dashboard – Juniper Sound Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="dashboard-page">
+  <nav class="nav">
+    <a class="brand" href="index.html">Juniper Sound</a>
+    <a href="index.html">Studio</a>
+    <a href="index.html#rooms">Rooms</a>
+    <a href="gigs.html">Events</a>
+    <span class="authslot" id="auth-slot"></span>
+  </nav>
+
+  <header class="top">
+    <h1>Studio dashboard</h1>
+    <p id="page-sub"></p>
+  </header>
+
+  <main class="stack">
+    <!-- everyone -->
+    <section id="sec-bookings" hidden>
+      <h2>My bookings</h2>
+      <div class="box stackbox" id="my-bookings"></div>
+    </section>
+
+    <!-- owner + admin -->
+    <section id="sec-studios" hidden>
+      <h2>Manage the studio</h2>
+      <div class="stackbox">
+        <form class="box" id="studio-form">
+        <h3 id="studio-form-title">Studio profile</h3>
+          <input type="hidden" id="studio-id">
+          <input type="hidden" id="studio-version">
+          <div class="formgrid">
+            <div><label for="studio-name">Name</label><input id="studio-name" type="text" maxlength="80" required></div>
+            <div><label for="studio-city">City</label><input id="studio-city" type="text" maxlength="60" required></div>
+            <div class="wide"><label for="studio-address">Address</label><input id="studio-address" type="text" maxlength="120" required></div>
+            <div class="wide"><label for="studio-blurb">Description</label><textarea id="studio-blurb" rows="2" maxlength="300"></textarea></div>
+            <div class="wide"><label for="studio-tags">Tags (comma separated)</label><input id="studio-tags" type="text" placeholder="Drum kit, PA system"></div>
+          </div>
+          <p class="error" id="studio-error" role="alert"></p>
+          <div class="rowbtns">
+            <button type="submit" class="primary">Save profile</button>
+          </div>
+        </form>
+
+        <form class="box" id="room-form">
+          <h3 id="room-form-title">Add a room</h3>
+          <input type="hidden" id="room-id">
+          <div class="formgrid">
+            <div><label for="room-name">Room name</label><input id="room-name" type="text" maxlength="60" required></div>
+            <div><label for="room-desc">Description</label><input id="room-desc" type="text" maxlength="100"></div>
+            <div><label for="room-rate">Hourly rate</label><input id="room-rate" type="number" min="1" step="1" required></div>
+          </div>
+          <p class="error" id="room-error" role="alert"></p>
+          <div class="rowbtns">
+            <button type="submit" class="primary">Save room</button>
+            <button type="button" class="btn" id="room-clear">Clear</button>
+          </div>
+        </form>
+
+        <div class="stackbox" id="studio-list"></div>
+      </div>
+    </section>
+
+    <section id="sec-gigs" hidden>
+      <h2>Manage gigs</h2>
+      <div class="stackbox">
+        <form class="box" id="gig-form">
+          <h3>Add a gig</h3>
+          <div class="formgrid">
+            <div><label for="gig-title">Title</label><input id="gig-title" type="text" maxlength="100" required></div>
+            <div><label for="gig-act">Act</label><input id="gig-act" type="text" maxlength="150" required></div>
+            <div><label for="gig-genre">Genre</label><input id="gig-genre" type="text" maxlength="40" required></div>
+            <div><label for="gig-price">Ticket price (0 for free)</label><input id="gig-price" type="number" min="0" step="1" value="0" required></div>
+            <div><label for="gig-date">Date</label><input id="gig-date" type="date" required></div>
+            <div><label for="gig-start">Starts</label><select class="field" id="gig-start"></select></div>
+            <div><label for="gig-end">Ends</label><select class="field" id="gig-end"></select></div>
+            <div id="gig-room-wrap"><label for="gig-room">Room (blocks it for bookings)</label><select class="field" id="gig-room" required></select></div>
+          </div>
+          <p class="error" id="gig-error" role="alert"></p>
+          <div class="rowbtns"><button type="submit" class="primary">Add gig</button></div>
+        </form>
+        <div class="box" id="gig-list"></div>
+      </div>
+    </section>
+
+    <section id="sec-studio-bookings" hidden>
+      <h2>Studio bookings</h2>
+      <div class="box stackbox" id="studio-bookings"></div>
+    </section>
+
+    <!-- admin only -->
+    <section id="sec-users" hidden>
+      <h2>Users</h2>
+      <div class="box stackbox" id="user-list"></div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/pages/dashboard.js"></script>
+</body>
+</html>
