@@ -8,8 +8,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/login.css">
 </head>
-<body>
+<body class="login-page">
   <nav class="nav">
     <a class="brand" href="index.html">Studizz1</a>
     <a href="index.html">Studio</a>
@@ -49,10 +50,12 @@
         <p class="error" id="register-error" role="alert"></p>
         <button type="submit" class="primary">Create account</button>
       </form>
-      <p class="hint" style="margin-top:1rem">Demo accounts (password <strong>Password123!</strong>): <code>customer001@studizzz.test</code>, <code>owner01@studizzz.test</code> (studio manager), <code>admin@studizzz.test</code>. Accounts and bookings are saved in this browser only.</p>
+      <p class="hint" style="margin-top:1rem">Create an account with your email address. If email confirmation is enabled, confirm your address before logging in.</p>
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/api.js"></script>
   <script src="js/pages/login.js"></script>

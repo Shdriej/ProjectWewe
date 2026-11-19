@@ -1,0 +1,65 @@
+:root { --hours: 14; }
+
+.timeline-wrap { overflow-x: auto; border: 2px solid var(--iron); border-radius: 8px; background: var(--coal); }
+.timeline { min-width: 860px; }
+.row {
+  display: grid;
+  grid-template-columns: 170px repeat(var(--hours), minmax(46px, 1fr));
+  border-bottom: 2px solid var(--iron);
+}
+.row:last-child { border-bottom: 0; }
+.ruler .tick { font-size: .75rem; color: var(--ash); padding: .4rem 0 .4rem .35rem; border-left: 1px solid var(--iron); }
+
+.room { padding: .7rem .8rem; border-right: 2px solid var(--iron); }
+.room strong { display: block; font-family: var(--display); font-weight: 800; font-size: 1.1rem; }
+.room span { font-size: .8rem; color: var(--ash); }
+.row.focus .room { background: #fff0f3; box-shadow: inset 4px 0 0 var(--pink); }
+
+.slot, .clip { border: 0; border-left: 1px solid var(--iron); min-height: 64px; margin: 0; padding: 0; background: #f5f7fa; }
+.slot { cursor: pointer; }
+.slot:hover:not(:disabled) { background: #fce8ee; }
+.slot:disabled { cursor: not-allowed; background: repeating-linear-gradient(135deg, #eef1f5, #eef1f5 6px, #e5e9ef 6px, #e5e9ef 12px); }
+.slot.picked, .slot.picked:hover { background: var(--pink); color: #ffffff; }
+
+.clip {
+  background: var(--blood);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: .82rem;
+  line-height: 1.3;
+  padding: .45rem 1rem .45rem .6rem;
+  margin: 6px 2px;
+  min-height: 52px;
+  border-left: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border-radius: 5px;
+}
+.clip small { display: block; font-weight: 400; opacity: .9; }
+.clip.gig {
+  color: var(--bone);
+  background: repeating-linear-gradient(-45deg, var(--tape) 0 14px, #eed067 14px 28px);
+}
+
+.legend { list-style: none; display: flex; flex-wrap: wrap; gap: 1.25rem; padding: 0; margin: .9rem 0 0; font-size: .85rem; color: var(--ash); }
+.legend li { display: flex; align-items: center; gap: .4rem; }
+.swatch { width: 16px; height: 16px; border: 1px solid var(--iron); }
+.swatch.free { background: #f5f7fa; }
+.swatch.picked { background: var(--pink); border-color: var(--pink); }
+.swatch.taken { background: var(--blood); border-color: var(--blood); }
+.swatch.gig { background: var(--tape); border-color: var(--tape); }
+
+.panel { display: grid; gap: 1.25rem; }
+.panel form, .mine { background: var(--coal); border: 2px solid var(--iron); border-left: 6px solid var(--blood); border-radius: 8px; padding: 1.1rem; }
+.summary { margin: .75rem 0 1rem; font-size: .92rem; color: var(--ash); }
+.summary.ready { color: var(--bone); }
+.summary strong { font-family: var(--display); font-weight: 800; font-size: 1.25rem; color: var(--gold-ink); }
+.who { margin: 0 0 .5rem; font-size: .88rem; color: var(--ash); }
+
+.mine ul { list-style: none; margin: .9rem 0 0; padding: 0; display: grid; gap: .6rem; }
+.mine li { display: flex; justify-content: space-between; gap: .5rem; align-items: center; font-size: .88rem; border-top: 1px solid var(--iron); padding-top: .6rem; }
+.mine li:first-child { border-top: 0; padding-top: 0; }
+.mine .empty { color: var(--ash); }
+.mine button { background: none; border: 2px solid var(--iron); border-radius: 6px; padding: .2rem .65rem; cursor: pointer; color: #b4233b; font-weight: 700; }
+.mine button:hover { border-color: var(--blood); background: var(--blood); color: #ffffff; }

@@ -23,7 +23,13 @@ async function submit(form, errorBox, action) {
   const button = form.querySelector("button[type=submit]");
   button.disabled = true;
   try {
-    const { user } = await action();
+    const result = await action();
+    if (result.needsEmailConfirmation) {
+      errorBox.textContent = "Account created. Check your email to confirm it, then log in.";
+      button.disabled = false;
+      return;
+    }
+    const { user } = result;
     goAfterLogin(user);
   } catch (err) {
     errorBox.textContent = err.message;

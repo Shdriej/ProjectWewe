@@ -1,0 +1,25 @@
+.dashboard-page .top, .dashboard-page main { max-width: 1440px; }
+.formgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0 1rem; }
+.formgrid .wide { grid-column: 1 / -1; }
+.rowbtns { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .9rem; }
+.rowbtns .primary { width: auto; margin: 0; padding: .6rem 1.6rem; }
+.btn {
+  background: var(--coal); border: 2px solid var(--iron); border-radius: 6px; padding: .3rem .8rem; cursor: pointer;
+  color: var(--bone); font-weight: 600; font-size: .85rem;
+}
+.btn:hover { border-color: var(--pink); }
+.btn.danger { color: #b4233b; }
+.btn.danger:hover { border-color: var(--blood); background: var(--blood); color: #ffffff; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.tablewrap { overflow-x: auto; margin-top: .75rem; }
+table.data { width: 100%; border-collapse: collapse; font-size: .88rem; }
+table.data th, table.data td { text-align: left; padding: .5rem .65rem; border-bottom: 1px solid var(--iron); white-space: nowrap; vertical-align: middle; }
+table.data th { color: var(--ash); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; font-size: .75rem; }
+table.data td .btn + .btn { margin-left: .4rem; }
+table.data select { background: var(--black); border: 2px solid var(--iron); border-radius: 5px; padding: .25rem .4rem; }
+.cancelled { color: #b4233b; }
+.stackbox { display: grid; gap: 1.25rem; margin-top: 1rem; }
+.stackbox h3 { font-size: 1.5rem; letter-spacing: .03em; }
+.stackbox .sub { margin: .2rem 0 0; font-size: .88rem; color: var(--ash); }
+.pager { display: flex; align-items: center; gap: .75rem; margin-top: .9rem; font-size: .85rem; color: var(--ash); }

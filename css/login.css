@@ -1,0 +1,9 @@
+.login-page .top { text-align: center; }
+.authbox { max-width: 440px; margin: 0 auto; }
+.tabs { display: flex; gap: .5rem; margin-bottom: 1rem; }
+.tabs button {
+  flex: 1; padding: .55rem 1rem; background: var(--coal); border: 2px solid var(--iron); border-radius: 6px; cursor: pointer;
+  font-family: var(--display); font-weight: 700; font-size: 1.05rem; color: var(--ash);
+}
+.tabs button[aria-selected="true"] { background: var(--pink); border-color: var(--pink); color: #ffffff; }
+.hint { font-size: .8rem; color: var(--ash); margin: .3rem 0 0; }

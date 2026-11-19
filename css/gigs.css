@@ -1,0 +1,15 @@
+.gigs { list-style: none; margin: 0; padding: 0; display: grid; gap: .9rem; }
+li.gig {
+  display: grid; grid-template-columns: 120px 1fr auto; gap: 1.25rem; align-items: center;
+  background: var(--coal); border: 2px solid var(--iron); border-left: 6px solid var(--pink); border-radius: 8px; padding: 1rem 1.25rem;
+}
+li.gig .when strong { display: block; font-family: var(--display); font-weight: 800; font-size: 1.35rem; color: var(--gold-ink); line-height: 1.2; }
+li.gig .when span { font-size: .85rem; color: var(--ash); }
+li.gig .what strong { display: block; font-family: var(--display); font-weight: 800; font-size: 1.35rem; }
+li.gig .what span { display: block; font-size: .88rem; color: var(--ash); }
+li.gig .price { font-family: var(--display); font-weight: 800; font-size: 1.7rem; color: var(--pink); }
+
+@media (max-width: 600px) {
+  li.gig { grid-template-columns: 1fr auto; }
+  li.gig .when { grid-column: 1 / -1; }
+}

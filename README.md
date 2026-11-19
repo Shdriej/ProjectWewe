@@ -1,17 +1,22 @@
-# ProjectWewe
+# Studizz1
 
-A single-studio website for Studizz1, with room availability, online bookings, studio events, and a manager dashboard. Demo accounts and bookings are stored in the browser.
+A single-studio rehearsal and recording site with room availability, account sign-in, bookings, events, and a studio manager dashboard. Supabase provides PostgreSQL storage and authentication.
 
-## Demo accounts
 
-Use `Password123!` with any of these accounts:
 
-- `customer001@studizzz.test` — customer
-- `owner01@studizzz.test` — studio manager
-- `admin@studizzz.test` — admin
+   ```sql
+   update public.profiles
+   set role = 'owner'
+   where email = lower('chidreyolaco@gmail.com');
 
-## Developed by
+   update public.studios
+   set owner_id = (
+     select id from public.profiles
+     where email = lower('chidrwy@gmail.com')
+   )
+   where singleton = true;
+   ```
 
-- Shhdr
-- brell
-- ilj
+   This grants that account access to the studio dashboard. Do not expose a Supabase secret or `service_role` key in the browser.
+
+The schema seeds the studio, its three rooms, and two sample events. Browser-only demo accounts and bookings from the old version are not migrated.
