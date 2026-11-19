@@ -8,7 +8,7 @@ const api = (() => {
   const SESSION_KEY = "studizzz-session-v1";
   const CFG = { openHour: 9, closeHour: 23, currency: "₱", maxBookingHours: 8, maxDaysAhead: 90 };
   const FEATURED_STUDIO = {
-    name: "Juniper Sound Studio",
+    name: "Studizz1",
     city: "Davao City",
     address: "18 Acacia Lane, Calinan",
     blurb: "A welcoming, thoughtfully equipped space for rehearsals, recording, and good ideas.",
@@ -120,7 +120,7 @@ const api = (() => {
   ];
   // studio = [studio index, room index]; `in` = days from today
   const BASE_GIGS = [
-    { title: "Juniper Open Mic", act: "A friendly night for local voices", studio: [0, 0], in: 2, start: 19, end: 22, price: 150, genre: "Mixed" },
+    { title: "Studizz1 Open Mic", act: "A friendly night for local voices", studio: [0, 0], in: 2, start: 19, end: 22, price: 150, genre: "Mixed" },
     { title: "Acoustic Room Sessions", act: "Mara Quinn and guests", studio: [0, 1], in: 6, start: 18, end: 21, price: 250, genre: "Acoustic" },
   ];
   // [customer index, studio index, room index, days from today, start, end, notes]
@@ -132,7 +132,19 @@ const api = (() => {
   ];
 
   function migrateFeaturedStudio(db) {
-    if (db.featuredStudioId && db.studios.some(s => s.id === db.featuredStudioId)) return false;
+    const savedStudio = db.studios.find(s => s.id === db.featuredStudioId);
+    if (savedStudio) {
+      if (savedStudio.name !== "Juniper Sound Studio") return false;
+      savedStudio.name = FEATURED_STUDIO.name;
+      savedStudio.version = (savedStudio.version || 0) + 1;
+      db.gigs.forEach(gig => {
+        if (gig.studioId === savedStudio.id) {
+          gig.venue = FEATURED_STUDIO.name;
+          if (gig.title === "Juniper Open Mic") gig.title = "Studizz1 Open Mic";
+        }
+      });
+      return true;
+    }
     const studio = db.studios.find(s => s.name === "Fitzroy Sessions") || db.studios[0];
     if (!studio) return false;
 

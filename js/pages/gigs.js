@@ -4,7 +4,7 @@ async function render() {
   const gigs = await api.gigs();
   const list = $("#gig-list");
 
-  $("#page-title").textContent = "Events at Juniper Sound Studio";
+  $("#page-title").textContent = "Events at Studizz1";
   $("#page-sub").textContent = gigs.length
     ? `${gigs.length} upcoming ${gigs.length === 1 ? "event" : "events"} at the studio.`
     : "No events scheduled right now. Check back soon.";

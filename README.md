@@ -1,6 +1,6 @@
 # ProjectWewe
 
-A single-studio website for Juniper Sound Studio, with room availability, online bookings, studio events, and a manager dashboard. Demo accounts and bookings are stored in the browser.
+A single-studio website for Studizz1, with room availability, online bookings, studio events, and a manager dashboard. Demo accounts and bookings are stored in the browser.
 
 ## Demo accounts
 
